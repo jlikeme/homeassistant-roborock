@@ -249,7 +249,7 @@ class RoborockFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             config_entry: config_entries.ConfigEntry,
     ) -> RoborockOptionsFlowHandler:
         """Get the options flow for this handler."""
-        return RoborockOptionsFlowHandler(config_entry)
+        return RoborockOptionsFlowHandler()
 
 
 def discriminant(_: Any, validators: tuple):
@@ -317,10 +317,8 @@ ROBOROCK_SCHEMA = {CONF_CLOUD_INTEGRATION: vol.Coerce(bool)}
 class RoborockOptionsFlowHandler(config_entries.OptionsFlow):
     """Roborock config flow options handler."""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+    def __init__(self) -> None:
         """Initialize HACS options flow."""
-        self.config_entry = config_entry
-        self.options = dict(config_entry.options)
         self.discovered_devices = None
 
     async def async_step_init(
@@ -402,6 +400,7 @@ class RoborockOptionsFlowHandler(config_entries.OptionsFlow):
             user_input: dict[str, Any] | None = None,
     ) -> FlowResult:
         """Handle setup of various platforms."""
+        self.options = dict(self.config_entry.options)
         if user_input:
             data: dict = {}
             for key, value in user_input.items():

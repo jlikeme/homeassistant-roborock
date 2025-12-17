@@ -2,7 +2,8 @@
   "domain": "roborock",
   "name": "Roborock",
   "codeowners": [
-    "@humbertogontijo"
+    "@humbertogontijo",
+    "@jlikeme"
   ],
   "config_flow": true,
   "documentation": "https://github.com/humbertogontijo/homeassistant-roborock",
@@ -14,8 +15,8 @@
     "roborock"
   ],
   "requirements": [
-    "python-roborock==2.12.1",
+    "python-roborock==2.19.0",
     "dacite==1.8.0"
   ],
-  "version": "1.0.18"
+  "version": "1.0.16-1"
 }
