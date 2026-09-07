@@ -11,7 +11,6 @@ import voluptuous as vol
 from roborock.roborock_message import RoborockDataProtocol
 
 from homeassistant.components.vacuum import (
-    ATTR_BATTERY_ICON,
     ATTR_FAN_SPEED,
     ATTR_FAN_SPEED_LIST,
     StateVacuumEntity,
@@ -29,7 +28,7 @@ RETURNING = VacuumActivity.RETURNING
 
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_BATTERY_LEVEL, ATTR_STATE
+from homeassistant.const import ATTR_STATE
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv, entity_platform
@@ -241,7 +240,6 @@ class RoborockVacuum(RoborockCoordinatedEntity, StateVacuumEntity, ABC):
             | VacuumEntityFeature.STOP
             | VacuumEntityFeature.RETURN_HOME
             | VacuumEntityFeature.FAN_SPEED
-            | VacuumEntityFeature.BATTERY
             | VacuumEntityFeature.STATUS
             | VacuumEntityFeature.SEND_COMMAND
             | VacuumEntityFeature.LOCATE
@@ -284,10 +282,6 @@ class RoborockVacuum(RoborockCoordinatedEntity, StateVacuumEntity, ABC):
             return {}
         data: dict[str, Any] = dict(self._device_status.as_dict())
 
-        if self.supported_features & VacuumEntityFeature.BATTERY:
-            data[ATTR_BATTERY_LEVEL] = self.battery_level
-            data[ATTR_BATTERY_ICON] = self.battery_icon
-
         if self.supported_features & VacuumEntityFeature.FAN_SPEED:
             data[ATTR_FAN_SPEED] = self.fan_speed
 
@@ -299,13 +293,6 @@ class RoborockVacuum(RoborockCoordinatedEntity, StateVacuumEntity, ABC):
         data.update(self.capability_attributes)
 
         return data
-
-    @property
-    def battery_level(self) -> int | None:
-        """Return the battery level of the vacuum cleaner."""
-        if self._device_status is None:
-            return None
-        return self._device_status.battery
 
     @property
     def fan_speed(self) -> str | None:
